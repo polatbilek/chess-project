@@ -6,7 +6,8 @@ pieces = {" #R ": "r", " #Kt ": "n", " #B ": "b", " #Q ": "q", " #K ": "k", " #P
 
 
 # Turns the board info into notation, board only contains useful board rows (so 8 rows only)
-def get_notation_form(board):
+# The extra values (whos_turn, castl...) should be determined by additional dedicated function, easy-to-write if needed
+def get_notation_form(board, whos_turn, castling_states, en_passant, half_move, full_move):
 	notation = ""
 
 	for line in board:
@@ -15,7 +16,10 @@ def get_notation_form(board):
 			if piece in list(pieces.keys()):
 				row += pieces[piece]
 
-		notation = row + "/" + notation
+		notation += row + "/"
+
+	notation = notation[:-1]
+	notation += " " + whos_turn + " " + castling_states + " " + en_passant + " " + half_move + " " + full_move
 
 	return notation
 
@@ -39,7 +43,7 @@ def parse_text(f):
 				board_parse = False
 
 				with open(path_to_write, "a+") as f:
-					notation_form = get_notation_form(board)
+					notation_form = get_notation_form(board, "w", "KQkq", "-", "0", "0")
 					notation_form += "\n\n####################################\n\n"
 					f.write(original_board_form)
 					f.write(notation_form)
